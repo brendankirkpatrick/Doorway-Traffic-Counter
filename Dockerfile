@@ -1,5 +1,5 @@
 # Use an official Python runtime as the base image
-FROM python:3.10
+FROM python:3.11.3
 
 # Set the working directory in the container
 WORKDIR /home
@@ -11,6 +11,8 @@ COPY requirements.txt .
 # RUN apt-get update && apt-get install ffmpeg libsm6 libxext6  -y
 # Install the project dependencies
 # RUN pip install -r requirements.txt
+RUN apt-get update && apt-get install ffmpeg libsm6 libxext6  -y
+RUN apt install libxcb-xinerama0
 RUN pip install --upgrade pip
 RUN pip install cmake==3.25.2
 RUN pip install dlib==19.24.1
