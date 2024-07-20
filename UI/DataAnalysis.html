@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Historical Data Analysis - Doorway Traffic Counter</title>
+	<link rel="stylesheet" href="styles.css">
+
+</head>
+<body>
+<header>
+    <h1>Historical Data Analysis - Doorway Traffic Counter</h1>
+</header>
+<div class="container">
+    <h2>Historical Data Table</h2>
+    <table id="data-table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Count</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <div id="analysis-results"></div>
+    <button class="button" onclick="performAnalysis()">Perform Analysis</button>
+    <a href="index.html" class="button">Home</a>
+</div>
+<script>
+    // Sample historical data (replace with actual data fetching logic)
+    const historicalData = [
+        { date: '2024-07-01', count: 100 },
+        { date: '2024-07-02', count: 120 },
+        { date: '2024-07-03', count: 110 },
+        { date: '2024-07-04', count: 130 },
+        { date: '2024-07-05', count: 150 }
+    ];
+
+    // Function to populate the table with historical data
+    function populateTable() {
+        const tableBody = document.querySelector('#data-table tbody');
+        historicalData.forEach(entry => {
+            const row = document.createElement('tr');
+            row.innerHTML = `<td>${entry.date}</td><td>${entry.count}</td>`;
+            tableBody.appendChild(row);
+        });
+    }
+
+    // Function to perform analysis (replace with actual analysis logic)
+    function performAnalysis() {
+        const counts = historicalData.map(entry => entry.count);
+        const total = counts.reduce((acc, val) => acc + val, 0);
+        const average = total / counts.length;
+        const max = Math.max(...counts);
+        const min = Math.min(...counts);
+
+        const analysisResults = document.getElementById('analysis-results');
+        analysisResults.innerHTML = `
+            <h2>Analysis Results</h2>
+            <p><strong>Total Count:</strong> ${total}</p>
+            <p><strong>Average Count:</strong> ${average.toFixed(2)}</p>
+            <p><strong>Maximum Count:</strong> ${max}</p>
+            <p><strong>Minimum Count:</strong> ${min}</p>
+        `;
+    }
+
+    // Populate the table when the page loads
+    document.addEventListener('DOMContentLoaded', () => {
+        populateTable();
+    });
+</script>
+</body>
+</html>

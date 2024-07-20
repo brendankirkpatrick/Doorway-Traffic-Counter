@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Notification Settings - Doorway Traffic Counter</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header>
+    <h1>Notification Settings - Doorway Traffic Counter</h1>
+</header>
+<div class="container">
+    <form class="notification-form" id="notification-form">
+        <label for="threshold">Notification Threshold:</label>
+        <input type="number" id="threshold" name="threshold" min="0" step="10" placeholder="Enter threshold...">
+        <button type="submit" class="button">Set Threshold</button>
+    </form>
+    <div class="notification-message" id="notification-message"></div>
+    <a href="index.html" class="button">Home</a>
+</div>
+
+<script>
+    // Notification form submission handling
+    const notificationForm = document.getElementById('notification-form');
+    const notificationMessage = document.getElementById('notification-message');
+
+    notificationForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+        const thresholdValue = document.getElementById('threshold').value;
+        if (!thresholdValue) {
+            notificationMessage.innerHTML = '<p>Please enter a threshold value.</p>';
+        } else {
+            // Placeholder for actual notification logic
+            notificationMessage.innerHTML = `<p>Notification threshold set to ${thresholdValue}</p>`;
+            document.getElementById('threshold').value = '';
+        }
+    });
+</script>
+</body>
+</html>
