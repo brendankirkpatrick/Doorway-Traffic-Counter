@@ -95,13 +95,13 @@ def dataAll():
         conn.close()
         return  jsonify({"data":data}, error)
     if request.method == "POST":
-        # try:
-        cur.execute('INSERT INTO "data" (direction, timestamp)'
-                    'VALUES (%s, %s)',
-                    (dir, timestamp))
-        conn.commit()
-        # except:
-        #     error = "SQL Error"
+        try:
+            cur.execute('INSERT INTO "data" (direction, timestamp)'
+                        'VALUES (%s, %s)',
+                        (dir, timestamp))
+            conn.commit()
+        except:
+            error = "SQL Error"
         cur.close()
         conn.close()
         return  jsonify(error)

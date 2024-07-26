@@ -19,6 +19,7 @@ def addTimestamp():
     URL = config.url + '/dataAll'
     PARAMS = {'dir':True, 'timestamp': ct}
     r = requests.post(url = URL, params=PARAMS)
+    print(r)
     return r.json()
 
 def fetchData():
@@ -30,10 +31,9 @@ def fetchData():
 
 @app.route('/')
 def homePage():
-    # addTimestamp()
-    # fetchData()
-    # return render_template('index.html' )
-    return '<h1>helloworld</h1>'
+    addTimestamp()
+    fetchData()
+    return render_template('index.html' )
 
 @app.route('/DataAnalysis/')
 def dataPage():

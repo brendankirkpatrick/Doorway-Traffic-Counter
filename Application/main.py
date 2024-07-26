@@ -35,7 +35,7 @@ QQuickWindow.setSceneGraphBackend('software')
 app = QGuiApplication(sys.argv)
 engine = QQmlApplicationEngine()
 engine.quit.connect(app.quit)
-engine.load('./UI/main.qml')
+engine.load('./Application/UI/main.qml')
 
 back_end = Backend()
 
