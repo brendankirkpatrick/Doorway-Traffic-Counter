@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, request, render_template
 import requests
 import psycopg2
 import config
@@ -28,12 +28,32 @@ def fetchData():
     r = requests.get(url = URL, params=PARAMS)
     print(r.json())
 
+#Routing to Backend
+@app.route('/user', methods=["GET", "POST", "DELETE"])
+def userEnpoint():
+    username = str(request.args.get('username'))
+    password = str(request.args.get('password'))
+    method = request.method
+    acc = endpoints.user(username, password, method)
+    return acc
+@app.route('/dataAll', methods=["GET", "POST", "DELETE"])
+def fetchAll():
+    dir = str(request.args.get('dir'))
+    timestamp = str(request.args.get('timestamp'))
+    method = request.method
+    acc = endpoints.dataAll(dir, timestamp, method)
+    return acc
+@app.route('/dataDate', methods=["GET"])
+def fetchDataDate():
+    date = str(request.args.get('date'))
+    method = request.method
+    acc = endpoints.dataDate(date,method)
+    return acc
+
+# Frontend Routing
 @app.route('/')
 def homePage():
-    # addTimestamp()
-    # fetchData()
-    # return render_template('index.html' )
-    return '<h1>helloworld</h1>'
+    return render_template('index.html')
 
 @app.route('/DataAnalysis/')
 def dataPage():

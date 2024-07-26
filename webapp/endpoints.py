@@ -4,13 +4,6 @@ import psycopg2
 import config
 from init_db import init_db 
 
-def create_app():
-    app = Flask(__name__)
-    init_db()
-    return app
-
-app = create_app()
-
 def get_db_connection():
     conn = psycopg2.connect(
         host=config.host,
@@ -19,15 +12,12 @@ def get_db_connection():
         password=config.password)
     return conn
 
-@app.route('/user', methods=["GET", "POST", "DELETE"])
-def user():
+def user(username, password, method):
     conn = get_db_connection()
     cur = conn.cursor()
     error = None
     data = None
-    username = str(request.args.get('username'))
-    password = str(request.args.get('password'))
-    if request.method == "GET":
+    if method == "GET":
         userInfo = None
         try:
             cur.execute('SELECT * FROM "appUsers" where username=%s and password=%s;', (username, password))
@@ -47,7 +37,7 @@ def user():
             cur.close()
             conn.close()
             return  jsonify({"data":userInfo}, error)
-    elif request.method == "POST":
+    elif method == "POST":
         data = False
         try:
             cur.execute('INSERT INTO "appUsers" (username, password)'
@@ -60,7 +50,7 @@ def user():
         cur.close()
         conn.close()
         return  jsonify({"data":data}, error)
-    elif request.method == "DELETE":
+    elif method == "DELETE":
         success = False
         try:
             cur.execute('DELETE FROM "appUsers" where username=%s and password=%s;', (username, password))
@@ -77,15 +67,13 @@ def user():
         conn.close()
         return  jsonify({"data":[]}, error)
 
-@app.route('/dataAll', methods=["GET", "POST", "DELETE"])
-def dataAll():
+def dataAll(dir, timestamp, method):
     conn = get_db_connection()
     cur = conn.cursor()
-    dir = str(request.args.get('dir'))
-    timestamp = str(request.args.get('timestamp'))
     error = None
     data = None
-    if request.method == "GET":
+    print("running through here")
+    if method == "GET":
         try:
             cur.execute('SELECT * FROM "data"')
             data = cur.fetchall()
@@ -94,14 +82,14 @@ def dataAll():
         cur.close()
         conn.close()
         return  jsonify({"data":data}, error)
-    if request.method == "POST":
-        # try:
-        cur.execute('INSERT INTO "data" (direction, timestamp)'
-                    'VALUES (%s, %s)',
-                    (dir, timestamp))
-        conn.commit()
-        # except:
-        #     error = "SQL Error"
+    if method == "POST":
+        try:
+            cur.execute('INSERT INTO "data" (direction, timestamp)'
+                        'VALUES (%s, %s)',
+                        (dir, timestamp))
+            conn.commit()
+        except:
+            error = "SQL Error"
         cur.close()
         conn.close()
         return  jsonify(error)
@@ -112,17 +100,14 @@ def dataAll():
         return  jsonify({"data":[]}, error)
 
 
-@app.route('/dataDate', methods=["GET"])
-def dataDate():
+def dataDate(date, method):
     conn = get_db_connection()
     cur = conn.cursor()
-    date = str(request.args.get('date'))
     dateStart = date + ' 00:00:00'
     dateEnd = date + ' 24:00:00'
-    print(dateStart, dateEnd)
     error = None
     data = None
-    if request.method == "GET":
+    if method == "GET":
         try:
             cur.execute('SELECT * FROM "data" where timestamp between %s and %s', (dateStart, dateEnd))
             data = cur.fetchall()
@@ -136,7 +121,3 @@ def dataDate():
         cur.close()
         conn.close()
         return  jsonify({"data":[]}, error)
-
-
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=6000, Debug=True)
