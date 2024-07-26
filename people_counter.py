@@ -59,9 +59,12 @@ def log_data(move_in, in_time, move_out, out_time):
 
 def post_data(direction: bool, time_data: datetime):
 	#create the post request to the database 
-	URL = 'http://localhost:5000/dataAll'
-	PARAMS = {'dir':dir, 'timestamp': time_data}
-	r = requests.post(url = URL, params=PARAMS)
+	try:
+		URL = 'http://localhost:5000/dataAll'
+		PARAMS = {'dir':dir, 'timestamp': time_data}
+		r = requests.post(url = URL, params=PARAMS)
+	except:
+		logger.error("Connection to database failed...")
 
 def people_counter():
 	# main function for people_counter.py
