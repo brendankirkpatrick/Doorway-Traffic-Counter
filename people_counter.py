@@ -58,10 +58,10 @@ def log_data(move_in, in_time, move_out, out_time):
 			wr.writerows(export_data)
 
 def post_data(direction: bool, time_data: datetime):
-    #create the post request to the database 
-    URL = 'http://localhost:5000/dataAll'
-    PARAMS = {'dir':dir, 'timestamp': timestamp}
-    r = requests.post(url = URL, params=PARAMS)
+	#create the post request to the database 
+	URL = 'http://localhost:5000/dataAll'
+	PARAMS = {'dir':dir, 'timestamp': timestamp}
+	r = requests.post(url = URL, params=PARAMS)
 
 def people_counter():
 	# main function for people_counter.py
@@ -258,7 +258,7 @@ def people_counter():
 						move_out.append(totalUp)
 						out_time.append(date_time)
 						to.counted = True
-                        post_data(False, date_time)
+						post_data(False, date_time)
 
                     # I BELIEVE THIS IS ENTERING
 					# if the direction is positive (indicating the object
@@ -274,7 +274,7 @@ def people_counter():
 						# compute the sum of total people inside
 						total = []
 						total.append(len(move_in) - len(move_out))
-                        post_data(True, date_time)
+						post_data(True, date_time)
 
 			# store the trackable object in our dictionary
 			trackableObjects[objectID] = to
