@@ -2,14 +2,12 @@ from tracker.centroidtracker import CentroidTracker
 from tracker.trackableobject import TrackableObject
 from imutils.video import VideoStream
 from itertools import zip_longest
-from utils.mailer import Mailer
 from imutils.video import FPS
 from utils import thread
 import numpy as np
 import threading
 import argparse
 import datetime
-import schedule
 import logging
 import imutils
 import time
@@ -17,6 +15,7 @@ import dlib
 import json
 import csv
 import cv2
+import requests
 
 # execution start time
 start_time = time.time()
@@ -46,10 +45,6 @@ def parse_arguments():
     args = vars(ap.parse_args())
     return args
 
-def send_mail():
-	# function to send the email alerts
-	Mailer().send(config["Email_Receive"])
-
 def log_data(move_in, in_time, move_out, out_time):
 	# function to log the counting data
 	data = [move_in, in_time, move_out, out_time]
@@ -61,6 +56,12 @@ def log_data(move_in, in_time, move_out, out_time):
 		if myfile.tell() == 0: # check if header rows are already existing
 			wr.writerow(("Move In", "In Time", "Move Out", "Out Time"))
 			wr.writerows(export_data)
+
+def post_data(direction: bool, time_data: datetime):
+    #create the post request to the database 
+    URL = 'http://localhost:5000/dataAll'
+    PARAMS = {'dir':dir, 'timestamp': timestamp}
+    r = requests.post(url = URL, params=PARAMS)
 
 def people_counter():
 	# main function for people_counter.py
@@ -221,13 +222,6 @@ def people_counter():
 				# add the bounding box coordinates to the rectangles list
 				rects.append((startX, startY, endX, endY))
 
-		# draw a horizontal line in the center of the frame -- once an
-		# object crosses this line we will determine whether they were
-		# moving 'up' or 'down'
-		cv2.line(frame, (0, H // 2), (W, H // 2), (0, 0, 0), 3)
-		cv2.putText(frame, "-Prediction border - Entrance-", (10, H - ((i * 20) + 200)),
-			cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 1)
-
 		# use the centroid tracker to associate the (1) old object
 		# centroids with (2) the newly computed object centroids
 		objects = ct.update(rects)
@@ -264,7 +258,9 @@ def people_counter():
 						move_out.append(totalUp)
 						out_time.append(date_time)
 						to.counted = True
+                        post_data(False, date_time)
 
+                    # I BELIEVE THIS IS ENTERING
 					# if the direction is positive (indicating the object
 					# is moving down) AND the centroid is below the
 					# center line, count the object
@@ -274,29 +270,14 @@ def people_counter():
 						move_in.append(totalDown)
 						in_time.append(date_time)
 						# if the people limit exceeds over threshold, send an email alert
-						if sum(total) >= config["Threshold"]:
-							cv2.putText(frame, "-ALERT: People limit exceeded-", (10, frame.shape[0] - 80),
-								cv2.FONT_HERSHEY_COMPLEX, 0.5, (0, 0, 255), 2)
-							if config["ALERT"]:
-								logger.info("Sending email alert..")
-								email_thread = threading.Thread(target = send_mail)
-								email_thread.daemon = True
-								email_thread.start()
-								logger.info("Alert sent!")
 						to.counted = True
 						# compute the sum of total people inside
 						total = []
 						total.append(len(move_in) - len(move_out))
+                        post_data(True, date_time)
 
 			# store the trackable object in our dictionary
 			trackableObjects[objectID] = to
-
-			# draw both the ID of the object and the centroid of the
-			# object on the output frame
-			text = "ID {}".format(objectID)
-			cv2.putText(frame, text, (centroid[0] - 10, centroid[1] - 10),
-				cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
-			cv2.circle(frame, (centroid[0], centroid[1]), 4, (255, 255, 255), -1)
 
 		# construct a tuple of information we will be displaying on the frame
 		info_status = [
@@ -309,15 +290,6 @@ def people_counter():
 		("Total people inside", ', '.join(map(str, total))),
 		]
 
-		# display the output
-		for (i, (k, v)) in enumerate(info_status):
-			text = "{}: {}".format(k, v)
-			cv2.putText(frame, text, (10, H - ((i * 20) + 20)), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 0), 2)
-
-		for (i, (k, v)) in enumerate(info_total):
-			text = "{}: {}".format(k, v)
-			cv2.putText(frame, text, (265, H - ((i * 20) + 60)), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
-
 		# initiate a simple log to save the counting data
 		if config["Log"]:
 			log_data(move_in, in_time, move_out, out_time)
@@ -326,24 +298,10 @@ def people_counter():
 		if writer is not None:
 			writer.write(frame)
 
-		# show the output frame
-		cv2.imshow("Real-Time Monitoring/Analysis Window", frame)
-		key = cv2.waitKey(1) & 0xFF
-		# if the `q` key was pressed, break from the loop
-		if key == ord("q"):
-			break
 		# increment the total number of frames processed thus far and
 		# then update the FPS counter
 		totalFrames += 1
 		fps.update()
-
-		# initiate the timer
-		if config["Timer"]:
-			# automatic timer to stop the live stream (set to 8 hours/28800s)
-			end_time = time.time()
-			num_seconds = (end_time - start_time)
-			if num_seconds > 28800:
-				break
 
 	# stop the timer and display FPS information
 	fps.stop()
@@ -354,14 +312,4 @@ def people_counter():
 	if config["Thread"]:
 		vs.release()
 
-	# close any open windows
-	cv2.destroyAllWindows()
-
-# initiate the scheduler
-if config["Scheduler"]:
-	# runs at every day (09:00 am)
-	schedule.every().day.at("09:00").do(people_counter)
-	while True:
-		schedule.run_pending()
-else:
-	people_counter()
+people_counter()
