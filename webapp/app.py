@@ -14,10 +14,9 @@ def create_app():
 
 app = create_app()
 
-def addTimestamp():
-    ct = datetime.datetime.now()
+def addTimestamp(dir, timestamp):
     URL = config.url + '/dataAll'
-    PARAMS = {'dir':True, 'timestamp': ct}
+    PARAMS = {'dir':dir, 'timestamp': timestamp}
     r = requests.post(url = URL, params=PARAMS)
     return r.json()
 
@@ -53,6 +52,9 @@ def fetchDataDate():
 # Frontend Routing
 @app.route('/')
 def homePage():
+    ct = datetime.datetime.now()
+    dir = True
+    addTimestamp(dir, ct)
     return render_template('index.html')
 
 @app.route('/DataAnalysis/')
