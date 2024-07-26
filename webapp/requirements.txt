@@ -1,0 +1,4 @@
+flask
+psycog2
+requests
+datetime
