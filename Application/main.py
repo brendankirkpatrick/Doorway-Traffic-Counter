@@ -4,7 +4,6 @@ import threading
 import requests
 import datetime
 import config
-import asyncio
 from time import  sleep, strftime, gmtime
 
 from PyQt6.QtGui import QGuiApplication

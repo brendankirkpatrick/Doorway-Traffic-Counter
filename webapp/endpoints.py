@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+from flask import jsonify
 import os
 import psycopg2
 import config
@@ -72,7 +72,6 @@ def dataAll(dir, timestamp, method):
     cur = conn.cursor()
     error = None
     data = None
-    print("running through here")
     if method == "GET":
         try:
             cur.execute('SELECT * FROM "data"')

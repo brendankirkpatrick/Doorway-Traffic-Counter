@@ -11,8 +11,8 @@ def create_app():
     app = Flask(__name__)
     # init_db()
     return app
-
 app = create_app()
+
 
 def addTimestamp(dir, timestamp):
     URL = config.url + '/dataAll'
@@ -67,3 +67,5 @@ def dataPage():
 @app.route('/Settings/')
 def settingsPage():
     return render_template('Settings.html')
+# if __name__ == "__main__":
+#     app.run(host='0.0.0.0')
