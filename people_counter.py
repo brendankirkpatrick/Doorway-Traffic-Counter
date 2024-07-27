@@ -17,6 +17,7 @@ import dlib
 import json
 import csv
 import cv2
+import requests
 
 # Pushed new code
 # execution start time
@@ -68,7 +69,7 @@ def post_data(direction: bool, time_data: datetime):
 	try:
 		URL = 'http://localhost:5000/dataAll'
 		PARAMS = {'dir':dir, 'timestamp': time_data}
-		r = requests.post(url = URL, params=PARAMS)
+		r = requests.post(url = URL, params=PARAMS, timeout=1)
 	except:
 		logger.error("Connection to database failed...")
 
