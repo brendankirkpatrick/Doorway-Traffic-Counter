@@ -15,24 +15,6 @@ ApplicationWindow {
     Rectangle {
         anchors.fill: parent
     
-        //Video {
-        //    id: video
-        //    width : parent.width
-        //    height : parent.height
-        //    source: "./videos/video.mp4"
-            
-        //    MouseArea {
-        //        anchors.fill: parent
-        //        onClicked: {
-        //            video.play()
-        //        }
-        //    }
-
-        //    Keys.onSpacePressed: video.playbackState == MediaPlayer.PlayingState ? video.pause() : video.play()
-        //    Keys.onLeftPressed: video.seek(video.position - 5000)
-        //    Keys.onRightPressed: video.seek(video.position + 5000)
-        //}
-
         Image {
                 sourceSize.width: parent.width
                 sourceSize.height: parent.height

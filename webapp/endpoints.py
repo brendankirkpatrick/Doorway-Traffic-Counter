@@ -82,11 +82,7 @@ def dataAll(dir, timestamp, method):
         cur.close()
         conn.close()
         return  jsonify({"data":data}, error)
-<<<<<<< HEAD
-    if request.method == "POST":
-=======
     if method == "POST":
->>>>>>> e9b6b7196a770df32d48efc5bf63b7d32255e4d9
         try:
             cur.execute('INSERT INTO "data" (direction, timestamp)'
                         'VALUES (%s, %s)',

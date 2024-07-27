@@ -1,6 +1,9 @@
 import sys
 import os
 import threading
+import requests
+import config
+import datetime
 from time import sleep
 
 from PyQt6.QtGui import QGuiApplication
@@ -26,6 +29,9 @@ class Backend(QObject):
 
     def _bootUp(self):
         while True:
+            URL = config.url + '/dataDate'
+            PARAMS = {'date': date}
+            r = requests.get(url = URL, params=PARAMS)
             curr_time = strftime("%H:%M:%S", gmtime())
             self.updater(curr_time)
             sleep(0.1)

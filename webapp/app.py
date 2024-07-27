@@ -53,16 +53,10 @@ def fetchDataDate():
 # Frontend Routing
 @app.route('/')
 def homePage():
-<<<<<<< HEAD
-    addTimestamp()
-    fetchData()
-    return render_template('index.html' )
-=======
     ct = datetime.datetime.now()
     dir = True
     addTimestamp(dir, ct)
     return render_template('index.html')
->>>>>>> e9b6b7196a770df32d48efc5bf63b7d32255e4d9
 
 @app.route('/DataAnalysis/')
 def dataPage():
