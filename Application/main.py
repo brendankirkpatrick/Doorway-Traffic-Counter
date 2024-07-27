@@ -6,10 +6,10 @@ import datetime
 import config
 from time import  sleep, strftime, gmtime
 
-from PyQt6.QtGui import QGuiApplication
-from PyQt6.QtQml import QQmlApplicationEngine
-from PyQt6.QtQuick import QQuickWindow
-from PyQt6.QtCore import QObject, pyqtSignal
+from PyQt5.QtGui import QGuiApplication
+from PyQt5.QtQml import QQmlApplicationEngine
+from PyQt5.QtQuick import QQuickWindow
+from PyQt5.QtCore import QObject, pyqtSignal
 
 class Backend(QObject):
 

@@ -1,6 +1,5 @@
-import QtQuick
-import QtQuick.Controls.Basic
-import QtMultimedia
+import QtQuick 2.15
+import QtQuick.Controls 2.15
 
 ApplicationWindow {
     visible: true
