@@ -55,10 +55,20 @@ def fetchDataOnDate():
 # Frontend Routing
 @app.route('/')
 def homePage():
-    ct = datetime.datetime.now()
-    dir = False
-    addTimestamp(dir, ct)
-    return render_template('index.html')
+    date = datetime.date.today() 
+    data =  [-1,-1]
+    try:
+        acc = endpoints.dataOnDate(str(date),'GET')
+        acc.data
+        r = acc.json
+        print(r)
+        if (r["error"] != None):
+            print("Received Error!:" + r.error)
+            data = [-1,-1]
+        data = r["data"]
+    except:
+        data = [-1,-1]
+    return render_template('index.html',peopleIn=data[0], peopleOut=data[1])
 
 @app.route('/DataAnalysis/')
 def dataPage():
