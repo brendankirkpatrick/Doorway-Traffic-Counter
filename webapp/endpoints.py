@@ -31,12 +31,12 @@ def user(username, password, method):
             
             cur.close()
             conn.close()
-            return  jsonify({"data":userInfo}, error)
+            return  jsonify({"data":userInfo, "error": error})
         else:
             error = "User not found"
             cur.close()
             conn.close()
-            return  jsonify({"data":userInfo}, error)
+            return  jsonify({"data":userInfo, "error": error})
     elif method == "POST":
         data = False
         try:
@@ -49,7 +49,7 @@ def user(username, password, method):
             error = "SQL Error"
         cur.close()
         conn.close()
-        return  jsonify({"data":data}, error)
+        return  jsonify({"data":data, "error": error})
     elif method == "DELETE":
         success = False
         try:
@@ -60,12 +60,12 @@ def user(username, password, method):
             error = "SQL Error"
         cur.close()
         conn.close()
-        return  jsonify({"data":success}, error)
+        return  jsonify({"data":success, "error": error})
     else: 
         error = "Invalid Method"
         cur.close()
         conn.close()
-        return  jsonify({"data":[]}, error)
+        return  jsonify({"data":[], "error": error})
 
 def dataAll(dir, timestamp, method):
     conn = get_db_connection()
@@ -81,12 +81,8 @@ def dataAll(dir, timestamp, method):
             error = "SQL Error"
         cur.close()
         conn.close()
-        return  jsonify({"data":data}, error)
-<<<<<<< HEAD
-    if request.method == "POST":
-=======
+        return  jsonify({"data":data}, {"error": error})
     if method == "POST":
->>>>>>> e9b6b7196a770df32d48efc5bf63b7d32255e4d9
         try:
             cur.execute('INSERT INTO "data" (direction, timestamp)'
                         'VALUES (%s, %s)',
@@ -101,27 +97,37 @@ def dataAll(dir, timestamp, method):
         error = "Invalid Method"
         cur.close()
         conn.close()
-        return  jsonify({"data":[]}, error)
+        return  jsonify({"data":[], "error": error})
 
 
-def dataDate(date, method):
+def dataOnDate(date, method):
     conn = get_db_connection()
     cur = conn.cursor()
     dateStart = date + ' 00:00:00'
     dateEnd = date + ' 24:00:00'
     error = None
     data = None
+    acc = []
     if method == "GET":
         try:
             cur.execute('SELECT * FROM "data" where timestamp between %s and %s', (dateStart, dateEnd))
             data = cur.fetchall()
+            peopleIn = 0
+            peopleOut = 0
+            for moment in data:
+                if( moment[0] == True):
+                    peopleIn += 1
+                else:
+                    peopleOut += 1
+            acc.append(peopleIn)
+            acc.append(peopleOut)
         except:
             error = "SQL Error"
         cur.close()
         conn.close()
-        return  jsonify({"data":data}, error)
+        return  jsonify({"data":acc, "error": error})
     else: 
         error = "Invalid Method"
         cur.close()
         conn.close()
-        return  jsonify({"data":[]}, error)
+        return  jsonify({"data":[], "error": error})

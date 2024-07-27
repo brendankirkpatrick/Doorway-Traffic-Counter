@@ -9,7 +9,7 @@ from init_db import init_db
 
 def create_app():
     app = Flask(__name__)
-    init_db()
+    # init_db()
     return app
 
 app = create_app()
@@ -36,6 +36,7 @@ def userEnpoint():
     method = request.method
     acc = endpoints.user(username, password, method)
     return acc
+
 @app.route('/dataAll', methods=["GET", "POST", "DELETE"])
 def fetchAll():
     dir = str(request.args.get('dir'))
@@ -43,26 +44,21 @@ def fetchAll():
     method = request.method
     acc = endpoints.dataAll(dir, timestamp, method)
     return acc
-@app.route('/dataDate', methods=["GET"])
-def fetchDataDate():
+
+@app.route('/dataOnDate', methods=["GET"])
+def fetchDataOnDate():
     date = str(request.args.get('date'))
     method = request.method
-    acc = endpoints.dataDate(date,method)
+    acc = endpoints.dataOnDate(date,method)
     return acc
 
 # Frontend Routing
 @app.route('/')
 def homePage():
-<<<<<<< HEAD
-    addTimestamp()
-    fetchData()
-    return render_template('index.html' )
-=======
     ct = datetime.datetime.now()
-    dir = True
+    dir = False
     addTimestamp(dir, ct)
     return render_template('index.html')
->>>>>>> e9b6b7196a770df32d48efc5bf63b7d32255e4d9
 
 @app.route('/DataAnalysis/')
 def dataPage():

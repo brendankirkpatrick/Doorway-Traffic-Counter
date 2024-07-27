@@ -10,6 +10,8 @@ ApplicationWindow {
     title: "trafficTracker"
 
     property string currTime: "00:00:00"
+    property int peopleIn: -2
+    property int peopleOut: -2
     property QtObject backend
 
     Rectangle {
@@ -47,7 +49,7 @@ ApplicationWindow {
                 left: parent.left
                 leftMargin: 12
             }
-            text: "People In:"
+            text: "People In:" + peopleIn
             font.pixelSize: 24
             color: "black"
         }
@@ -59,7 +61,7 @@ ApplicationWindow {
                 left: parent.left
                 leftMargin: 12
             }
-            text: "People Out:"
+            text: "People Out:" +  peopleOut
             font.pixelSize: 24
             color: "black"
         }
@@ -80,8 +82,15 @@ ApplicationWindow {
     Connections {
         target: backend
 
-        function onUpdated(msg) {
+        function onTime(msg) {
             currTime = msg;
         }
+        function onPeopleIn(msg){
+            peopleIn = msg
+        }
+         function onPeopleOut(msg){
+            peopleOut = msg
+        }
+
     }    
 }
