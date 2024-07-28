@@ -275,7 +275,7 @@ def people_counter():
 						move_out.append(totalUp)
 						out_time.append(date_time)
 						to.counted = True
-						post_data(False, date_time)
+						post_data(True, date_time)
 
 					# if the direction is positive (indicating the object
 					# is moving down) AND the centroid is below the
