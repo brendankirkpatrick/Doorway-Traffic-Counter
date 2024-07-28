@@ -312,24 +312,24 @@ def people_counter():
 			cv2.circle(frame, (centroid[0], centroid[1]), 4, (255, 255, 255), -1)
 
 		# construct a tuple of information we will be displaying on the frame
-		info_status = [
-		("Exit", totalUp),
-		("Enter", totalDown),
-		("Status", status),
-		]
+		# info_status = [
+		# ("Exit", totalUp),
+		# ("Enter", totalDown),
+		# ("Status", status),
+		# ]
 
-		info_total = [
-		("Total people inside", ', '.join(map(str, total))),
-		]
+		# info_total = [
+		# ("Total people inside", ', '.join(map(str, total))),
+		# ]
 
-		# display the output
-		for (i, (k, v)) in enumerate(info_status):
-			text = "{}: {}".format(k, v)
-			cv2.putText(frame, text, (10, H - ((i * 20) + 20)), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 0), 2)
+		# # display the output
+		# for (i, (k, v)) in enumerate(info_status):
+		# 	text = "{}: {}".format(k, v)
+		# 	cv2.putText(frame, text, (10, H - ((i * 20) + 20)), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 0), 2)
 
-		for (i, (k, v)) in enumerate(info_total):
-			text = "{}: {}".format(k, v)
-			cv2.putText(frame, text, (265, H - ((i * 20) + 60)), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
+		# for (i, (k, v)) in enumerate(info_total):
+		# 	text = "{}: {}".format(k, v)
+		# 	cv2.putText(frame, text, (265, H - ((i * 20) + 60)), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
 
 		# initiate a simple log to save the counting data
 		if config["Log"]:
